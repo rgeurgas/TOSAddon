@@ -22,7 +22,7 @@
     "tags" : [
       "challenge",
       "interface",
-	  "UI"
+      "UI"
     ]
   },
   {
@@ -35,7 +35,7 @@
     "description" : "Removes functionality to delete skills on your hotbar that come from item sets when you lose access to the skill (such as when swapping equipment).",
     "tags" : [
       "bug",
-	  "skill"
+      "skill"
     ]
   },
   {
@@ -61,7 +61,7 @@
     "tags" : [
       "restart",
       "resurrect",
-	  "bug"
+      "bug"
     ]
   },
   {
