@@ -1,7 +1,7 @@
 [
   {
     "name" : "Auto Accept Duels",
-    "file" : "_autoacceptduels",
+    "file" : "autoacceptduels",
     "extension" : "ipf",
     "fileVersion" : "v1.0.0",
     "releaseTag" : "autoacceptduels",
