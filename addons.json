@@ -68,7 +68,7 @@
     "name" : "Show All Achievements",
     "file" : "showallachievements",
     "extension" : "ipf",
-    "fileVersion" : "v1.0.1",
+    "fileVersion" : "v1.0.2",
     "releaseTag" : "showallachievements",
     "unicode" : "⛄",
     "description" : "Removes the filter on hidden achievements and shows all of them in the user interface. Note that this may show some that are unobtainable.",

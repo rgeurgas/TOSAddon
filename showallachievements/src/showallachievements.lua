@@ -1,5 +1,5 @@
-function STATUS_ACHIEVE_INIT(frame)
-
+function STATUS_ACHIEVE_INIT()
+	local frame = ui.GetFrame("status");
     local achieveGbox = frame:GetChild('achieveGbox');
     local internalBox = achieveGbox:GetChild("internalBox");
 
@@ -9,7 +9,7 @@ function STATUS_ACHIEVE_INIT(frame)
     local y = 10;
 
     local equipAchieveName = pc.GetEquipAchieveName();
-
+	
     for i = 0, clscnt - 1 do
 
         local cls = GetClassByIndexFromList(clslist, i);
@@ -17,101 +17,101 @@ function STATUS_ACHIEVE_INIT(frame)
             break;
         end
 
+            local nowpoint = GetAchievePoint(GetMyPCObject(), cls.NeedPoint)
 
-        local nowpoint = GetAchievePoint(GetMyPCObject(), cls.NeedPoint)
+            local eachAchiveCSet = internalBox:CreateOrGetControlSet('each_achieve', 'ACHIEVE_RICHTEXT_' .. i, x, y);
+            tolua.cast(eachAchiveCSet, "ui::CControlSet");
 
-        local eachAchiveCSet = internalBox:CreateOrGetControlSet('each_achieve', 'ACHIEVE_RICHTEXT_' .. i, x, y);
-        tolua.cast(eachAchiveCSet, "ui::CControlSet");
+            eachAchiveCSet:SetUserValue('ACHIEVE_ID', cls.ClassID);
 
-        eachAchiveCSet:SetUserValue('ACHIEVE_ID', cls.ClassID);
+            local NORMAL_SKIN = eachAchiveCSet:GetUserConfig("NORMAL_SKIN")
+            local HAVE_SKIN = eachAchiveCSet:GetUserConfig("HAVE_SKIN")
 
-        local NORMAL_SKIN = eachAchiveCSet:GetUserConfig("NORMAL_SKIN")
-        local HAVE_SKIN = eachAchiveCSet:GetUserConfig("HAVE_SKIN")
-
-        local eachAchiveGBox = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'each_achieve_gbox')
-        local eachAchiveDescTitle = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_desctitle')
-        local eachAchiveReward = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_reward')
-        local eachAchiveGauge = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_gauge')
-        local eachAchiveStaticAccomplishment = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_static_accomplishment')
-        local eachAchiveAccomplishment = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_accomplishment')
-        local eachAchiveStaticDesc = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_static_desc')
-        local eachAchiveDesc = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_desc')
-        local eachAchiveName = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_name')
-        local eachAchiveReqBtn = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'req_reward_btn')
+            local eachAchiveGBox = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'each_achieve_gbox')
+            local eachAchiveDescTitle = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_desctitle')
+            local eachAchiveReward = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_reward')
+            local eachAchiveGauge = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_gauge')
+            local eachAchiveStaticAccomplishment = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_static_accomplishment')
+            local eachAchiveAccomplishment = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_accomplishment')
+            local eachAchiveStaticDesc = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_static_desc')
+            local eachAchiveDesc = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_desc')
+            local eachAchiveName = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'achieve_name')
+            local eachAchiveReqBtn = GET_CHILD_RECURSIVELY(eachAchiveCSet, 'req_reward_btn')
 
             --조건과 칭호의 위치를 텍스트 길이가 가장 긴 "달성도" 기준으로 맞춘다
-        eachAchiveReqBtn:ShowWindow(0);
-        eachAchiveDesc:SetOffset(eachAchiveStaticDesc:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveDesc:GetY())
-        eachAchiveAccomplishment:SetOffset(eachAchiveStaticAccomplishment:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveAccomplishment:GetY())
-        eachAchiveGauge:SetOffset(eachAchiveStaticAccomplishment:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveGauge:GetY())
-        eachAchiveGauge:Resize(eachAchiveGBox:GetWidth() - eachAchiveStaticAccomplishment:GetWidth() -50, eachAchiveGauge:GetHeight())
-        eachAchiveAccomplishment:SetText("(" .. nowpoint .. "/" .. cls.NeedCount .. ")")
+            eachAchiveReqBtn:ShowWindow(0);
+            eachAchiveDesc:SetOffset(eachAchiveStaticDesc:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveDesc:GetY())
+            eachAchiveAccomplishment:SetOffset(eachAchiveStaticAccomplishment:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveAccomplishment:GetY())
+            eachAchiveGauge:SetOffset(eachAchiveStaticAccomplishment:GetX() + eachAchiveStaticAccomplishment:GetWidth() + 10, eachAchiveGauge:GetY())
+            eachAchiveGauge:Resize(eachAchiveGBox:GetWidth() - eachAchiveStaticAccomplishment:GetWidth() -50, eachAchiveGauge:GetHeight())
+            eachAchiveAccomplishment:SetText("(" .. nowpoint .. "/" .. cls.NeedCount .. ")")
 
-        local isHasAchieve = 0;
-        if HAVE_ACHIEVE_FIND(cls.ClassID) == 1 and nowpoint >= cls.NeedCount then
-            isHasAchieve = 1;
-        end
+            local isHasAchieve = 0;
+            if HAVE_ACHIEVE_FIND(cls.ClassID) == 1 and nowpoint >= cls.NeedCount then
+                isHasAchieve = 1;
+            end
 
-        if isHasAchieve == 1 then
-            if equipAchieveName ~= 'None' and equipAchieveName == cls.Name then
-                eachAchiveDescTitle:SetText(cls.DescTitle .. ScpArgMsg('Auto__(SayongJung)'));
+            if isHasAchieve == 1 then
+                if equipAchieveName ~= 'None' and equipAchieveName == cls.Name then
+                    eachAchiveDescTitle:SetText(cls.DescTitle .. ScpArgMsg('Auto__(SayongJung)'));
+                else
+                    eachAchiveDescTitle:SetText(cls.DescTitle);
+                end
+                eachAchiveGBox:SetSkinName(HAVE_SKIN)
             else
                 eachAchiveDescTitle:SetText(cls.DescTitle);
+                eachAchiveGBox:SetSkinName(NORMAL_SKIN)
             end
-            eachAchiveGBox:SetSkinName(HAVE_SKIN)
-        else
-            eachAchiveDescTitle:SetText(cls.DescTitle);
-            eachAchiveGBox:SetSkinName(NORMAL_SKIN)
-        end
 
-        eachAchiveDesc:SetText(cls.Desc);
-        eachAchiveGauge:SetPoint(nowpoint, cls.NeedCount);
-        eachAchiveName:SetTextByKey('name', cls.Name);
-        eachAchiveReward:SetTextByKey('reward', cls.Reward);
+            eachAchiveDesc:SetText(cls.Desc);
+            eachAchiveGauge:SetPoint(nowpoint, cls.NeedCount);
+            eachAchiveName:SetTextByKey('name', cls.Name);
+            eachAchiveReward:SetTextByKey('reward', cls.Reward);
 
-        if isHasAchieve == 1 then
-            eachAchiveGauge:ShowWindow(0);
-            eachAchiveStaticAccomplishment:ShowWindow(0);
-            eachAchiveAccomplishment:ShowWindow(0);
+            if isHasAchieve == 1 then
+                eachAchiveGauge:ShowWindow(0);
+                eachAchiveStaticAccomplishment:ShowWindow(0);
+                eachAchiveAccomplishment:ShowWindow(0);
 
-            eachAchiveStaticDesc:SetOffset(eachAchiveStaticDesc:GetX(), eachAchiveStaticAccomplishment:GetY())
-            eachAchiveDesc:SetOffset(eachAchiveDesc:GetX(), eachAchiveStaticDesc:GetY())
+                eachAchiveStaticDesc:SetOffset(eachAchiveStaticDesc:GetX(), eachAchiveStaticAccomplishment:GetY())
+                eachAchiveDesc:SetOffset(eachAchiveDesc:GetX(), eachAchiveStaticDesc:GetY())
                
-            local etcObjValue = TryGetProp(etcObj, 'AchieveReward_' .. cls.ClassName);
+                local etcObjValue = TryGetProp(etcObj, 'AchieveReward_' .. cls.ClassName);
                 -- if etcObj['AchieveReward_' .. cls.ClassName] == 0 then
-            if etcObjValue ~= nil and etcObjValue == 0 then
-                eachAchiveReqBtn:ShowWindow(1);
-            end
-        else
+                if etcObjValue ~= nil and etcObjValue == 0 then
+                    eachAchiveReqBtn:ShowWindow(1);
+                end
+            else
                 eachAchiveGauge:ShowWindow(1)
-            eachAchiveStaticAccomplishment:ShowWindow(1);
-            eachAchiveAccomplishment:ShowWindow(1);
-        end
+                eachAchiveStaticAccomplishment:ShowWindow(1);
+                eachAchiveAccomplishment:ShowWindow(1);
+            end
 
-        local suby = eachAchiveDesc:GetY() + eachAchiveDesc:GetHeight() + 10;
+            local suby = eachAchiveDesc:GetY() + eachAchiveDesc:GetHeight() + 10;
 
 
-        if cls.Name ~= 'None' then
-            eachAchiveName:ShowWindow(1)
-            eachAchiveName:SetOffset(eachAchiveName:GetX(), suby)
-            suby = eachAchiveName:GetY() + eachAchiveName:GetHeight() + 10
-        else
-            eachAchiveName:ShowWindow(0)
-        end
+            if cls.Name ~= 'None' then
+                eachAchiveName:ShowWindow(1)
+                eachAchiveName:SetOffset(eachAchiveName:GetX(), suby)
+                suby = eachAchiveName:GetY() + eachAchiveName:GetHeight() + 10
+            else
+                eachAchiveName:ShowWindow(0)
+            end
 
-        if cls.Reward ~= 'None' then
-            eachAchiveReward:ShowWindow(1)
-            eachAchiveReward:SetOffset(eachAchiveReward:GetX(), suby)
-            suby = eachAchiveReward:GetY() + eachAchiveReward:GetHeight() + 10
-        else
-            eachAchiveReward:ShowWindow(0)
-        end
+            if cls.Reward ~= 'None' then
+                eachAchiveReward:ShowWindow(1)
+                eachAchiveReward:SetOffset(eachAchiveReward:GetX(), suby)
+                suby = eachAchiveReward:GetY() + eachAchiveReward:GetHeight() + 10
+            else
+                eachAchiveReward:ShowWindow(0)
+            end
 
-        eachAchiveGBox:Resize(eachAchiveGBox:GetWidth(), suby)
+            eachAchiveGBox:Resize(eachAchiveGBox:GetWidth(), suby)
 
-        eachAchiveCSet:Resize(eachAchiveCSet:GetWidth(), eachAchiveGBox:GetHeight())
+            eachAchiveCSet:Resize(eachAchiveCSet:GetWidth(), eachAchiveGBox:GetHeight())
 
-        y = y + eachAchiveCSet:GetHeight() + 10;
+            y = y + eachAchiveCSet:GetHeight() + 10;
+
     end
 
     
@@ -126,7 +126,7 @@ function STATUS_ACHIEVE_INIT(frame)
     local x = 40;
     local y = 145;
     
-
+	
 	local useableTitleList = GET_CHILD_RECURSIVELY(frame, "useableTitleList", "ui::CDropList");
 	useableTitleList:SelectItemByKey(config.GetXMLConfig("SelectAchieveKey"))
 	if equipAchieveName == nil or equipAchieveName == 'None' then
@@ -139,11 +139,11 @@ function STATUS_ACHIEVE_INIT(frame)
 	frame:SetUserValue("ShowNextStatReward", 0)
 	local showNextStatRewardCheckBox = GET_CHILD_RECURSIVELY(frame, 'showNextStatReward')
 	showNextStatRewardCheckBox:SetCheck(0)
-
+	
 	local defaultTitleText = frame:GetUserConfig("DEFAULT_TITLE_TEXT")
 
 	useableTitleList:AddItem(0, defaultTitleText)
-
+	
     for i = 0, clscnt - 1 do
 
         local cls = GetClassByIndexFromList(clslist, i);
@@ -167,7 +167,7 @@ function STATUS_ACHIEVE_INIT(frame)
 			end
         end
     end
-				
+
 	local nextAchieveCount = 0
 	local list, cnt = GetClassList("AchieveStatReward");
 
@@ -188,7 +188,7 @@ function STATUS_ACHIEVE_INIT(frame)
 			nextAchieveCls = cls
 		end		
 	end
-
+	
 	local titleListStatic = GET_CHILD_RECURSIVELY(frame, "titleListStatic")
 	titleListStatic:SetTextByKey("value1", myAchieveCount)
 
@@ -207,7 +207,7 @@ function STATUS_ACHIEVE_INIT(frame)
 					
 	frame : SetUserValue("currentAchieveClassID", currentAchieveCls.ClassID)
 	frame : SetUserValue("nextAchieveClassID", nextAchieveCls.ClassID)
-
+	
 	CHANGE_STAT_FONT(frame, 'STR', currentAchieveCls.STR_BM, 1)
 	CHANGE_STAT_FONT(frame, 'CON', currentAchieveCls.CON_BM, 1)
 	CHANGE_STAT_FONT(frame, 'INT', currentAchieveCls.INT_BM, 1)
@@ -218,6 +218,6 @@ function STATUS_ACHIEVE_INIT(frame)
 	CHANGE_STAT_FONT(frame, 'DEF', currentAchieveCls.DEF_BM, 1)
 	CHANGE_STAT_FONT(frame, 'MDEF', currentAchieveCls.MDEF_BM, 1)
 	CHANGE_STAT_FONT(frame, 'MSP', currentAchieveCls.MSP_BM, 1)
-				
+
 	frame:Invalidate();
 end
