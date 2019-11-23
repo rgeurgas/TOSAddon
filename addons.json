@@ -12,6 +12,18 @@
     ]
   },
   {
+    "name" : "Hidden Stamps",
+    "file" : "hiddenstamps",
+    "extension" : "ipf",
+    "fileVersion" : "v1.0.0",
+    "releaseTag" : "hiddenstamps",
+    "unicode" : "⛄",
+    "description" : "Type /hiddenstamps in chat to display current progress on hidden stamp missions for the \"Stamp Tour\" event.",
+    "tags" : [
+      "event"
+    ]
+  },
+  {
     "name" : "No Challenge UI",
     "file" : "nochallengeui",
     "extension" : "ipf",
