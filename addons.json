@@ -63,18 +63,6 @@
     ]
   },
   {
-    "name" : "Party Context Fix",
-    "file" : "partycontextfix",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "partycontextfix",
-    "unicode" : "⛄",
-    "description" : "Fixes the party UI to allow right clicking party members for a context menu, and viewing their class build by hovering over their class icon.",
-    "tags" : [
-      "party"
-    ]
-  },
-  {
     "name" : "Restart Me",
     "file" : "restartme",
     "extension" : "ipf",
