@@ -8,8 +8,12 @@ function WBREXTEND_ON_INIT(addon, frame)
 end
 
 function WBREXTEND_LOAD()
-	local file, err = io.open(WBREXTEND_GET_FILENAME(),"w")
-	file:close();
+	 local f = io.open(WBREXTEND_GET_FILENAME(),"r")
+	 if f~=nil then 
+		io.close(f) 
+	else 
+		local file, error = io.open(WBREXTEND_GET_FILENAME(), "w");
+	end
 	_G["WBREXTEND"] = {};
 	
 	for line in io.lines(WBREXTEND_GET_FILENAME()) do
