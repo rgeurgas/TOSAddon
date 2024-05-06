@@ -104,4 +104,20 @@
 	  "faint"
     ]
   }
+    {
+    "name" : "WBR Extend",
+    "file" : "wbrextend",
+    "extension" : "ipf",
+    "fileVersion" : "v1.0.2",
+    "releaseTag" : "wbrextend",
+    "unicode" : "⛄",
+    "description" : "Adds a memberinfo button and gearscore display in the Weekly Boss Raid menu.",
+    "tags" : [
+      "wbr",
+      "extend",
+	  "weekly",
+	  "boss",
+	  "raid"
+    ]
+  }
 ]
