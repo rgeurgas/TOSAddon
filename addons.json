@@ -103,7 +103,7 @@
 	  "stagger",
 	  "faint"
     ]
-  }
+  },
     {
     "name" : "WBR Extend",
     "file" : "wbrextend",
