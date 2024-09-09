@@ -1,4 +1,4 @@
 # Tree of Savior Addons by Toadspaz
-WBRExtend fork so I can see gs and memberinfo of party members.
+Adds gs and memberinfo of party members. To be used with WBRExtend for GS
 
 Tree of Savior © IMCGAMES CO. LTD.
