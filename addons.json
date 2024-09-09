@@ -1,123 +1,15 @@
 [
   {
-    "name" : "Auto Accept Duels",
-    "file" : "autoacceptduels",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "autoacceptduels",
-    "unicode" : "⛄",
-    "description" : "Automatically accepts duel requests.",
-    "tags" : [
-      "duel"
-    ]
-  },
-  {
-    "name" : "Hidden Stamps",
-    "file" : "hiddenstamps",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "hiddenstamps",
-    "unicode" : "⛄",
-    "description" : "Type /hiddenstamps in chat to display current progress on hidden stamp missions for the \"Stamp Tour\" event.",
-    "tags" : [
-      "event"
-    ]
-  },
-  {
-    "name" : "No Challenge UI",
-    "file" : "nochallengeui",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "nochallengeui",
-    "unicode" : "⛄",
-    "description" : "Removes the user interface that appears during Challenge Mode.",
-    "tags" : [
-      "challenge",
-      "interface",
-      "UI"
-    ]
-  },
-  {
-    "name" : "No Delete Skill",
-    "file" : "nodeleteskill",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "nodeleteskill",
-    "unicode" : "⛄",
-    "description" : "Removes functionality to delete skills on your hotbar that come from item sets when you lose access to the skill (such as when swapping equipment).",
-    "tags" : [
-      "bug",
-      "skill"
-    ]
-  },
-  {
-    "name" : "No Like",
-    "file" : "nolike",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "nolike",
-    "unicode" : "⛄",
-    "description" : "Removes the automatic like that occurs when viewing another individual player's information.",
-    "tags" : [
-      "like"
-    ]
-  },
-  {
-    "name" : "Restart Me",
-    "file" : "restartme",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "restartme",
-    "unicode" : "⛄",
-    "description" : "Opens the resurrection window if you are dead via the command /resme. The command /resmenow is also available to immediately return to the resurrection location if you are dead.",
-    "tags" : [
-      "restart",
-      "resurrect",
-      "bug"
-    ]
-  },
-  {
-    "name" : "Show All Achievements",
-    "file" : "showallachievements",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.2",
-    "releaseTag" : "showallachievements",
-    "unicode" : "⛄",
-    "description" : "Removes the filter on hidden achievements and shows all of them in the user interface. Note that this may show some that are unobtainable.",
-    "tags" : [
-      "achievement",
-      "title"
-    ]
-  },
-  {
-    "name" : "monsterframes",
-    "file" : "monsterframes",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.5",
-    "releaseTag" : "monsterframes",
-    "unicode" : "⛄",
-    "description" : "An update to the original monsterframes addon by Excrulon, previously updated by suzumeiko. Displays faint value of boss monsters.",
-    "tags" : [
-      "monster",
-      "info",
-	  "stagger",
-	  "faint"
-    ]
-  },
-    {
-    "name" : "WBR Extend",
-    "file" : "wbrextend",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.2",
-    "releaseTag" : "wbrextend",
-    "unicode" : "⛄",
-    "description" : "Adds a memberinfo button and gearscore display in the Weekly Boss Raid menu.",
-    "tags" : [
-      "wbr",
-      "extend",
-	  "weekly",
-	  "boss",
-	  "raid"
+    "name": "Party Info",
+    "file": "partyinfo",
+    "extension": "ipf",
+    "fileVersion": "v1.0.0",
+    "releaseTag": "partyinfo",
+    "unicode": "🐔",
+    "description": "Adds a memberinfo button and gearscore display in Party menu.",
+    "tags": [
+      "party",
+      "info"
     ]
   }
 ]
