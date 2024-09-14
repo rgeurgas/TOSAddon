@@ -87,7 +87,7 @@ end
 
 setmetatable(PartyInfoReloaded, { __call = PartyInfoReloaded.new });
 
-function PARTYINFORELOADED_ON_INIT()
+function PARTYINFORELOADED_ON_INIT(addon, frame)
 	PARTYINFORELOADED_LOAD()
 
 	if (PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP == nil) then
