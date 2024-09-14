@@ -32,16 +32,22 @@ function PartyMemberInfo.new(self)
 	members.lvboxY = 0
 
 	members.AddPartyMemberInfo = function(self, partyInfoCtrlSet, partyMemberInfo)
-		local mapCls = GetClassByType("Map", partyMemberInfo:GetMapID())
-		if mapCls ~= nil then
-			local location = partyInfoCtrlSet:CreateOrGetControl('richtext', "partymemberinfo_location", 0, 0, 0, 0)
-			location:SetText(string.format("{s12}{ol}[%s-%d]", mapCls.Name, partyMemberInfo:GetChannel() + 1))
-			location:Resize(100, 20)
-			location:SetOffset(10, 0)
-			location:ShowWindow(1)
+		if partyMemberInfo:GetMapID() > 0 then
+			local mapCls = GetClassByType("Map", partyMemberInfo:GetMapID())
+
+			if mapCls ~= nil then
+				local location = partyInfoCtrlSet:CreateOrGetControl('richtext', "partymemberinfo_location", 0, 0, 0, 0)
+				location:SetText(string.format("{s12}{ol}[%s-%d]", mapCls.Name, partyMemberInfo:GetChannel() + 1))
+				location:Resize(100, 20)
+				location:SetOffset(10, 0)
+				location:ShowWindow(1)
+			end
 		end
 
+
 		local teamName = partyMemberInfo:GetName()
+		acutil.log(teamName)
+
 
 		if PartyMemberInfo[teamName] ~= nil then
 			local gearscore = partyInfoCtrlSet:CreateOrGetControl('richtext', "partymemberinfo_gearscore", 0, 0, 0, 0)
@@ -75,8 +81,8 @@ function PartyMemberInfo.new(self)
 	end
 
 	members.Destroy = function(self)
-		if (PartyMemberInfo.instance.UPDATE_PARTYMEMBERINFO_HP ~= nil) then
-			UPDATE_PARTYMEMBERINFO_HP = PartyMemberInfo.instance.UPDATE_PARTYMEMBERINFO_HP
+		if (PartyMemberInfo.instance.UPDATE_PARTYINFO_HP ~= nil) then
+			UPDATE_PARTYINFO_HP = PartyMemberInfo.instance.UPDATE_PARTYINFO_HP
 		end
 	end
 
@@ -85,19 +91,17 @@ end
 
 setmetatable(PartyMemberInfo, { __call = PartyMemberInfo.new });
 
-function PARTYMEMBERINFO_ON_INIT(addon, frame)
+function PARTYMEMBERINFO_START()
 	if not loaded then
 		PARTYMEMBERINFO_LOAD()
 
-		if (PartyMemberInfo.instance.UPDATE_PARTYMEMBERINFO_HP == nil) then
-			PartyMemberInfo.instance.UPDATE_PARTYMEMBERINFO_HP = UPDATE_PARTYMEMBERINFO_HP
+		if (PartyMemberInfo.instance.UPDATE_PARTYINFO_HP == nil) then
+			PartyMemberInfo.instance.UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
 		end
 
-		UPDATE_PARTYMEMBERINFO_HP = function(partyInfoCtrlSet, partyMemberInfo)
-			PartyMemberInfo.instance.UPDATE_PARTYMEMBERINFO_HP(partyInfoCtrlSet, partyMemberInfo)
-			if partyMemberInfo:GetMapID() > 0 then
-				PartyMemberInfo.instance:AddPartyMemberInfo(partyInfoCtrlSet, partyMemberInfo)
-			end
+		UPDATE_PARTYINFO_HP = function(partyInfoCtrlSet, partyMemberInfo)
+			PartyMemberInfo.instance.UPDATE_PARTYINFO_HP(partyInfoCtrlSet, partyMemberInfo)
+			PartyMemberInfo.instance:AddPartyMemberInfo(partyInfoCtrlSet, partyMemberInfo)
 		end
 
 		loaded = true
@@ -110,3 +114,4 @@ if (PartyMemberInfo.instance ~= nil) then
 	PartyMemberInfo.instance:Destroy()
 end
 PartyMemberInfo.instance = PartyMemberInfo()
+PARTYMEMBERINFO_START()
