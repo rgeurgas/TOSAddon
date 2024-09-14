@@ -14,7 +14,7 @@ ROBOCOPY /s /e %1\src build\.tmp > NUL
 
 :Create
 ECHO. & ECHO Creating IPF...
-python build\.tools\ipf.py --enable-encryption --overwrite -vcf build\%1-v%2.ipf build\.tmp
+python build\.tools\ipf.py --enable-encryption --overwrite -cvf build\%1-v%2.ipf build\.tmp
 
 :Clean
 ECHO. & ECHO Deleting temporary folder...
