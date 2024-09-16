@@ -12,7 +12,9 @@
       "info",
       "reloaded",
       "gearscore",
-      "memberinfo"
+      "memberinfo",
+      "partyinfo",
+      "partyinforeloaded"
     ]
   }
 ]
