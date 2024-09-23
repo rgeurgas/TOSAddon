@@ -3,7 +3,7 @@
     "name": "Party Info Reloaded",
     "file": "partyinforeloaded",
     "extension": "ipf",
-    "fileVersion": "v1.0.6",
+    "fileVersion": "v1.0.7",
     "releaseTag": "partyinforeloaded",
     "unicode": "🐔",
     "description": "Adds a memberinfo button and gearscore display in Party menu.",
