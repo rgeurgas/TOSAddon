@@ -127,12 +127,10 @@ end
 
 function PARTYINFORELOADED_ON_INIT(addon, frame)
 	if PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP == nil then
-		print('hp nil')
 		PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
 	end
 
 	if PartyInfoReloaded.instance.callback_get_gear_score_ranking == nil then
-		print('ranking nil')
 		PartyInfoReloaded.instance.callback_get_gear_score_ranking = callback_get_gear_score_ranking
 	end
 
@@ -142,8 +140,6 @@ function PARTYINFORELOADED_ON_INIT(addon, frame)
 	end
 
 	callback_get_gear_score_ranking = function(code, ret_json)
-		PartyInfoReloaded.instance.callback_get_gear_score_ranking(code, ret_json)
-
 		local dic = json.decode(ret_json)
 		local rankList = dic['list']
 
@@ -154,6 +150,8 @@ function PARTYINFORELOADED_ON_INIT(addon, frame)
 
 			PARTYINFORELOADED_UPDATE(teamName, charName, value)
 		end
+
+		PartyInfoReloaded.instance.callback_get_gear_score_ranking(code, ret_json)
 	end
 end
 
