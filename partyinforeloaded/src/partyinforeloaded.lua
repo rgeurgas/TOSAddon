@@ -3,8 +3,14 @@ local json = require('json_imc')
 
 _G['ADDONS'] = _G['ADDONS'] or {}
 local PartyInfoReloaded = _G['ADDONS'][addonName] or {}
-local _UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
-local _callback_get_gear_score_ranking = callback_get_gear_score_ranking
+
+if _UPDATE_PARTYINFO_HP == nil then
+	_UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
+end
+
+if _callback_get_gear_score_ranking == nil then
+	_callback_get_gear_score_ranking = callback_get_gear_score_ranking
+end
 
 function PARTYINFORELOADED_GET_FILENAME()
 	return '../partyinforeloaded.txt'
@@ -55,14 +61,13 @@ function PARTYINFORELOADED_UPDATE(teamName, charName, gearScore)
 	local addedName = false
 
 	if PartyInfoReloaded[teamName] == nil then
-		PartyInfoReloaded[teamName] = {}
-		PartyInfoReloaded[teamName][charName] = gearScore
+		PartyInfoReloaded[teamName] = gearScore
 		addedName = true
-	elseif PartyInfoReloaded[teamName][charName] == nil then
-		PartyInfoReloaded[teamName][charName] = gearScore
-		addedName = true
-	elseif tonumber(PartyInfoReloaded[teamName][charName]) < gearScore then
-		PartyInfoReloaded[teamName][charName] = gearScore
+		-- elseif PartyInfoReloaded[teamName][charName] == nil then
+		-- 	PartyInfoReloaded[teamName][charName] = gearScore
+		-- 	addedName = true
+	elseif tonumber(PartyInfoReloaded[teamName]) < gearScore then
+		PartyInfoReloaded[teamName] = gearScore
 		addedName = true
 	end
 
