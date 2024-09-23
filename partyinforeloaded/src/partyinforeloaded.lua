@@ -27,7 +27,8 @@ function PARTYINFORELOADED_LOAD()
 	PartyInfoReloaded = {};
 
 	for line in io.lines(PARTYINFORELOADED_GET_FILENAME()) do
-		local teamName, charName, gs = line:match('([^=]+)=([^=]+)=([^=]+)')
+		-- local teamName, charName, gs = line:match('([^=]+)=([^=]+)=([^=]+)')
+		local teamName, gs = line:match('([^=]+)=([^=]+)')
 
 		if PartyInfoReloaded[teamName] == nil then
 			PartyInfoReloaded[teamName] = gs
@@ -46,10 +47,12 @@ function PARTYINFORELOADED_SAVE()
 		return;
 	end
 
-	for teamName, v in pairs(PartyInfoReloaded) do
-		for charName, gs in pairs(v) do
-			file:write(teamName .. '=' .. charName .. '=' .. gs .. '\n');
-		end
+	for teamName, gs in pairs(PartyInfoReloaded) do
+		-- for teamName, v in pairs(PartyInfoReloaded) do
+		-- for charName, gs in pairs(v) do
+		-- 	file:write(teamName .. '=' .. charName .. '=' .. gs .. '\n');
+		-- end
+		file:write(teamName .. '=' .. gs .. '\n');
 	end
 
 	file:flush();
