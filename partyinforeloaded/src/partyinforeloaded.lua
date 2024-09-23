@@ -4,14 +4,6 @@ local json = require('json_imc')
 _G['ADDONS'] = _G['ADDONS'] or {}
 local PartyInfoReloaded = _G['ADDONS'][addonName] or {}
 
-if _UPDATE_PARTYINFO_HP == nil then
-	_UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
-end
-
-if _callback_get_gear_score_ranking == nil then
-	_callback_get_gear_score_ranking = callback_get_gear_score_ranking
-end
-
 function PARTYINFORELOADED_GET_FILENAME()
 	return '../partyinforeloaded.txt'
 end
@@ -27,14 +19,10 @@ function PARTYINFORELOADED_LOAD()
 	PartyInfoReloaded = {};
 
 	for line in io.lines(PARTYINFORELOADED_GET_FILENAME()) do
-		-- local teamName, charName, gs = line:match('([^=]+)=([^=]+)=([^=]+)')
 		local teamName, gs = line:match('([^=]+)=([^=]+)')
 
 		if PartyInfoReloaded[teamName] == nil then
 			PartyInfoReloaded[teamName] = gs
-			-- PartyInfoReloaded[teamName][charName] = gs
-			-- elseif PartyInfoReloaded[teamName][charName] == nil then
-			-- 	PartyInfoReloaded[teamName][charName] = gs
 		end
 	end
 end
@@ -48,10 +36,6 @@ function PARTYINFORELOADED_SAVE()
 	end
 
 	for teamName, gs in pairs(PartyInfoReloaded) do
-		-- for teamName, v in pairs(PartyInfoReloaded) do
-		-- for charName, gs in pairs(v) do
-		-- 	file:write(teamName .. '=' .. charName .. '=' .. gs .. '\n');
-		-- end
 		file:write(teamName .. '=' .. gs .. '\n');
 	end
 
@@ -66,9 +50,6 @@ function PARTYINFORELOADED_UPDATE(teamName, charName, gearScore)
 	if PartyInfoReloaded[teamName] == nil then
 		PartyInfoReloaded[teamName] = gearScore
 		addedName = true
-		-- elseif PartyInfoReloaded[teamName][charName] == nil then
-		-- 	PartyInfoReloaded[teamName][charName] = gearScore
-		-- 	addedName = true
 	elseif tonumber(PartyInfoReloaded[teamName]) < gearScore then
 		PartyInfoReloaded[teamName] = gearScore
 		addedName = true
@@ -77,21 +58,6 @@ function PARTYINFORELOADED_UPDATE(teamName, charName, gearScore)
 	if addedName then
 		PARTYINFORELOADED_SAVE()
 	end
-end
-
-function callback_get_gear_score_ranking(code, ret_json)
-	local dic = json.decode(ret_json)
-	local rankList = dic['list']
-
-	for k, v in pairs(rankList) do
-		local teamName = v['team_name']
-		local charName = v['char_name']
-		local value = v['value']
-
-		PARTYINFORELOADED_UPDATE(teamName, charName, value)
-	end
-
-	_callback_get_gear_score_ranking(code, ret_json)
 end
 
 function MEMBERINFO_ONCLICK(frame, ctrl, argStr, argNum)
@@ -105,62 +71,93 @@ function PartyInfoReloaded:new(o)
 
 	PARTYINFORELOADED_LOAD()
 
-	return o
-end
+	o.AddPartyInfoReloaded = function(partyInfoCtrlSet, partyInfoReloaded)
+		if partyInfoReloaded:GetMapID() > 0 then
+			local mapCls = GetClassByType('Map', partyInfoReloaded:GetMapID())
 
-function PartyInfoReloaded:AddPartyInfoReloaded(partyInfoCtrlSet, partyInfoReloaded)
-	if partyInfoReloaded:GetMapID() > 0 then
-		local mapCls = GetClassByType('Map', partyInfoReloaded:GetMapID())
+			if mapCls ~= nil then
+				local location = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_location', 0, 0, 0, 0)
+				location:SetText(string.format('{s12}{ol}[%s-%d]', mapCls.Name, partyInfoReloaded:GetChannel() + 1))
+				location:Resize(100, 20)
+				location:SetOffset(10, 0)
+				location:ShowWindow(1)
+			end
+		end
 
-		if mapCls ~= nil then
-			local location = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_location', 0, 0, 0, 0)
-			location:SetText(string.format('{s12}{ol}[%s-%d]', mapCls.Name, partyInfoReloaded:GetChannel() + 1))
-			location:Resize(100, 20)
-			location:SetOffset(10, 0)
-			location:ShowWindow(1)
+		local teamName = partyInfoReloaded:GetName()
+
+		if PartyInfoReloaded[teamName] ~= nil and PartyInfoReloaded[teamName] ~= nil then
+			local gearscore = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_gearscore', 0, 0, 0, 0)
+			gearscore:SetText(string.format('{s12}{ol}GS: %s', PartyInfoReloaded[teamName]))
+			gearscore:Resize(100, 20)
+			gearscore:SetOffset(10, 12)
+			gearscore:ShowWindow(1)
+		end
+
+		local btn = partyInfoCtrlSet:CreateOrGetControl('button', 'btn_' .. teamName, 0, 0, 0, 0)
+		tolua.cast(btn, 'ui::CButton')
+		btn:SetText('Memberinfo')
+		btn:SetEventScript(ui.LBUTTONUP, 'MEMBERINFO_ONCLICK')
+		btn:SetEventScriptArgString(ui.LBUTTONUP, teamName)
+		btn:SetUserValue('TEAMNAME', teamName)
+		btn:Resize(100, 20)
+		btn:SetOffset(100, 0)
+		btn:SetAlpha(0)
+		btn:ShowWindow(1)
+
+		local nameObj = partyInfoCtrlSet:GetChild('name_text')
+		nameObj:SetOffset(nameObj:GetX(), -11)
+
+		local lvbox = partyInfoCtrlSet:GetChild('lvbox')
+		lvbox:SetOffset(lvbox:GetX(), 15)
+	end
+
+	o.Destroy = function()
+		if PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP ~= nil then
+			UPDATE_PARTYINFO_HP = PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP
+		end
+
+		if PartyInfoReloaded.instance.callback_get_gear_score_ranking ~= nil then
+			callback_get_gear_score_ranking = PartyInfoReloaded.instance.callback_get_gear_score_ranking
 		end
 	end
 
-	local teamName = partyInfoReloaded:GetName()
-
-	if PartyInfoReloaded[teamName] ~= nil and PartyInfoReloaded[teamName] ~= nil then
-		local gearscore = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_gearscore', 0, 0, 0, 0)
-		gearscore:SetText(string.format('{s12}{ol}GS: %s', PartyInfoReloaded[teamName]))
-		gearscore:Resize(100, 20)
-		gearscore:SetOffset(10, 12)
-		gearscore:ShowWindow(1)
-	end
-
-	local btn = partyInfoCtrlSet:CreateOrGetControl('button', 'btn_' .. teamName, 0, 0, 0, 0)
-	tolua.cast(btn, 'ui::CButton')
-	btn:SetText('Memberinfo')
-	btn:SetEventScript(ui.LBUTTONUP, 'MEMBERINFO_ONCLICK')
-	btn:SetEventScriptArgString(ui.LBUTTONUP, teamName)
-	btn:SetUserValue('TEAMNAME', teamName)
-	btn:Resize(100, 20)
-	btn:SetOffset(100, 0)
-	btn:SetAlpha(0)
-	btn:ShowWindow(1)
-
-	local nameObj = partyInfoCtrlSet:GetChild('name_text')
-	nameObj:SetOffset(nameObj:GetX(), -11)
-
-	local lvbox = partyInfoCtrlSet:GetChild('lvbox')
-	lvbox:SetOffset(lvbox:GetX(), 15)
-end
-
-function PartyInfoReloaded:Destroy()
-	UPDATE_PARTYINFO_HP = _UPDATE_PARTYINFO_HP
+	return o
 end
 
 function PARTYINFORELOADED_ON_INIT(addon, frame)
+	if PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP == nil then
+		print('hp nil')
+		PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
+	end
+
+	if PartyInfoReloaded.instance.callback_get_gear_score_ranking == nil then
+		print('ranking nil')
+		PartyInfoReloaded.instance.callback_get_gear_score_ranking = callback_get_gear_score_ranking
+	end
+
 	UPDATE_PARTYINFO_HP = function(partyInfoCtrlSet, partyInfoReloaded)
-		PartyInfoReloaded.instance:AddPartyInfoReloaded(partyInfoCtrlSet, partyInfoReloaded)
-		_UPDATE_PARTYINFO_HP(partyInfoCtrlSet, partyInfoReloaded)
+		PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP(partyInfoCtrlSet, partyInfoReloaded)
+		PartyInfoReloaded.instance.AddPartyInfoReloaded(partyInfoCtrlSet, partyInfoReloaded)
+	end
+
+	callback_get_gear_score_ranking = function(code, ret_json)
+		PartyInfoReloaded.instance.callback_get_gear_score_ranking(code, ret_json)
+
+		local dic = json.decode(ret_json)
+		local rankList = dic['list']
+
+		for k, v in pairs(rankList) do
+			local teamName = v['team_name']
+			local charName = v['char_name']
+			local value = v['value']
+
+			PARTYINFORELOADED_UPDATE(teamName, charName, value)
+		end
 	end
 end
 
 if (PartyInfoReloaded.instance ~= nil) then
-	PartyInfoReloaded.instance:Destroy()
+	PartyInfoReloaded.instance.Destroy()
 end
 PartyInfoReloaded.instance = PartyInfoReloaded:new(nil)
