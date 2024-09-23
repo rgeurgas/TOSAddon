@@ -2,7 +2,12 @@ local addonName = 'partyinforeloaded'
 local json = require('json_imc')
 
 _G['ADDONS'] = _G['ADDONS'] or {}
-local PartyInfoReloaded = _G['ADDONS'][addonName] or {}
+_G['ADDONS'][addonName] = _G['ADDONS'][addonName] or {}
+_G['ADDONS'][addonName]['INSTANCE'] = _G['ADDONS'][addonName]['INSTANCE'] or {}
+_G['ADDONS'][addonName]['SCORES'] = _G['ADDONS'][addonName]['SCORES'] or {}
+
+local scores = _G['ADDONS'][addonName]['SCORES']
+local g = _G['ADDONS'][addonName]['INSTANCE']
 
 function PARTYINFORELOADED_GET_FILENAME()
 	return '../partyinforeloaded.txt'
@@ -16,13 +21,13 @@ function PARTYINFORELOADED_LOAD()
 		local file, error = io.open(PARTYINFORELOADED_GET_FILENAME(), 'w');
 		io.close(file)
 	end
-	PartyInfoReloaded = {};
+	scores = {};
 
 	for line in io.lines(PARTYINFORELOADED_GET_FILENAME()) do
 		local teamName, gs = line:match('([^=]+)=([^=]+)')
 
-		if PartyInfoReloaded[teamName] == nil then
-			PartyInfoReloaded[teamName] = gs
+		if scores[teamName] == nil then
+			scores[teamName] = gs
 		end
 	end
 end
@@ -35,7 +40,7 @@ function PARTYINFORELOADED_SAVE()
 		return;
 	end
 
-	for teamName, gs in pairs(PartyInfoReloaded) do
+	for teamName, gs in pairs(scores) do
 		file:write(teamName .. '=' .. gs .. '\n');
 	end
 
@@ -47,11 +52,11 @@ function PARTYINFORELOADED_UPDATE(teamName, charName, gearScore)
 	PARTYINFORELOADED_LOAD()
 	local addedName = false
 
-	if PartyInfoReloaded[teamName] == nil then
-		PartyInfoReloaded[teamName] = gearScore
+	if scores[teamName] == nil then
+		scores[teamName] = gearScore
 		addedName = true
-	elseif tonumber(PartyInfoReloaded[teamName]) < gearScore then
-		PartyInfoReloaded[teamName] = gearScore
+	elseif tonumber(scores[teamName]) < gearScore then
+		scores[teamName] = gearScore
 		addedName = true
 	end
 
@@ -64,14 +69,10 @@ function MEMBERINFO_ONCLICK(frame, ctrl, argStr, argNum)
 	ui.Chat('/memberinfo ' .. argStr)
 end
 
-function PartyInfoReloaded:new(o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
+function g.new(self)
+	local members = {}
 
-	PARTYINFORELOADED_LOAD()
-
-	o.AddPartyInfoReloaded = function(partyInfoCtrlSet, partyInfoReloaded)
+	members.AddPartyInfoReloaded = function(self, partyInfoCtrlSet, partyInfoReloaded)
 		if partyInfoReloaded:GetMapID() > 0 then
 			local mapCls = GetClassByType('Map', partyInfoReloaded:GetMapID())
 
@@ -86,9 +87,9 @@ function PartyInfoReloaded:new(o)
 
 		local teamName = partyInfoReloaded:GetName()
 
-		if PartyInfoReloaded[teamName] ~= nil and PartyInfoReloaded[teamName] ~= nil then
+		if scores[teamName] ~= nil and scores[teamName] ~= nil then
 			local gearscore = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_gearscore', 0, 0, 0, 0)
-			gearscore:SetText(string.format('{s12}{ol}GS: %s', PartyInfoReloaded[teamName]))
+			gearscore:SetText(string.format('{s12}{ol}GS: %s', scores[teamName]))
 			gearscore:Resize(100, 20)
 			gearscore:SetOffset(10, 12)
 			gearscore:ShowWindow(1)
@@ -112,31 +113,31 @@ function PartyInfoReloaded:new(o)
 		lvbox:SetOffset(lvbox:GetX(), 15)
 	end
 
-	o.Destroy = function()
-		if PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP ~= nil then
-			UPDATE_PARTYINFO_HP = PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP
-		end
-
-		if PartyInfoReloaded.instance.callback_get_gear_score_ranking ~= nil then
-			callback_get_gear_score_ranking = PartyInfoReloaded.instance.callback_get_gear_score_ranking
+	members.Destroy = function(self)
+		if (g.instance.UPDATE_PARTYINFO_HP ~= nil) then
+			UPDATE_PARTYINFO_HP = g.instance.UPDATE_PARTYINFO_HP
 		end
 	end
 
-	return o
+	return setmetatable(members, { __index = self })
 end
 
+setmetatable(g, { __call = g.new });
+
 function PARTYINFORELOADED_ON_INIT(addon, frame)
-	if PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP == nil then
-		PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
+	if g.instance.UPDATE_PARTYINFO_HP == nil then
+		g.instance.UPDATE_PARTYINFO_HP = UPDATE_PARTYINFO_HP
 	end
 
-	if PartyInfoReloaded.instance.callback_get_gear_score_ranking == nil then
-		PartyInfoReloaded.instance.callback_get_gear_score_ranking = callback_get_gear_score_ranking
+	if g.instance.callback_get_gear_score_ranking == nil then
+		g.instance.callback_get_gear_score_ranking = callback_get_gear_score_ranking
 	end
 
-	UPDATE_PARTYINFO_HP = function(partyInfoCtrlSet, partyInfoReloaded)
-		PartyInfoReloaded.instance.UPDATE_PARTYINFO_HP(partyInfoCtrlSet, partyInfoReloaded)
-		PartyInfoReloaded.instance.AddPartyInfoReloaded(partyInfoCtrlSet, partyInfoReloaded)
+	PARTYINFORELOADED_LOAD()
+
+	UPDATE_PARTYINFO_HP = function(partyInfoCtrlSet, partyMemberInfo)
+		g.instance.UPDATE_PARTYINFO_HP(partyInfoCtrlSet, partyMemberInfo)
+		g.instance:AddPartyInfoReloaded(partyInfoCtrlSet, partyMemberInfo)
 	end
 
 	callback_get_gear_score_ranking = function(code, ret_json)
@@ -151,11 +152,11 @@ function PARTYINFORELOADED_ON_INIT(addon, frame)
 			PARTYINFORELOADED_UPDATE(teamName, charName, value)
 		end
 
-		PartyInfoReloaded.instance.callback_get_gear_score_ranking(code, ret_json)
+		g.instance.callback_get_gear_score_ranking(code, ret_json)
 	end
 end
 
-if (PartyInfoReloaded.instance ~= nil) then
-	PartyInfoReloaded.instance.Destroy()
+if (g.instance ~= nil) then
+	g.instance:Destroy()
 end
-PartyInfoReloaded.instance = PartyInfoReloaded:new(nil)
+g.instance = g()
