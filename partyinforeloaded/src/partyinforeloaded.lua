@@ -113,15 +113,11 @@ function PartyInfoReloaded:AddPartyInfoReloaded(partyInfoCtrlSet, partyInfoReloa
 		end
 	end
 
-
 	local teamName = partyInfoReloaded:GetName()
 
-	print(teamName)
-	print(tostring(partyInfoReloaded))
-
-	if PartyInfoReloaded[teamName] ~= nil and PartyInfoReloaded[teamName][charName] ~= nil then
+	if PartyInfoReloaded[teamName] ~= nil and PartyInfoReloaded[teamName] ~= nil then
 		local gearscore = partyInfoCtrlSet:CreateOrGetControl('richtext', 'partyinforeloaded_gearscore', 0, 0, 0, 0)
-		gearscore:SetText(string.format('{s12}{ol}GS: %s', PartyInfoReloaded[teamName][charName]))
+		gearscore:SetText(string.format('{s12}{ol}GS: %s', PartyInfoReloaded[teamName]))
 		gearscore:Resize(100, 20)
 		gearscore:SetOffset(10, 12)
 		gearscore:ShowWindow(1)
